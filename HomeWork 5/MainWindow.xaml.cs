@@ -36,16 +36,19 @@ namespace HomeWork5
         string nameFirstNode;
         bool createEdge = false;
         Graph graph = new Graph();
+        int countNode=0;
         public void ClickNode(object sender, RoutedEventArgs e)
         {
             if (!create)
             {
                 DeleteNode(sender, e);
+                
             }
             else
             {
                 CreateEdge(sender, e);
                 createEdge = true;
+                
             }
         }
 
@@ -91,6 +94,7 @@ namespace HomeWork5
             Canvas.SetZIndex(el, 1);
             canvas.Children.Add(el);
             canvas.Children.Add(tb);
+            countNode++;
         }
 
         int FindId()
@@ -123,6 +127,7 @@ namespace HomeWork5
             DeleteNodeEdge(sender, e);
             DeleteNodeTB(sender, e);
             deleteNode = false;
+            countNode--;
         }
 
         void DeleteNodeTB(object sender, RoutedEventArgs e)
@@ -167,7 +172,6 @@ namespace HomeWork5
             line.X2 = x2 - 15;
             line.Stroke = Brushes.Black;
             line.StrokeThickness = 2;
-            line.Stroke = Brushes.Black;
 
             line.MouseEnter += new MouseEventHandler(LineEnter);
             line.MouseLeave += new MouseEventHandler(LineLeave);
@@ -452,16 +456,102 @@ namespace HomeWork5
             FirstCoord = true;
         }
 
-        void btn_StartMaxThroughput_Click(object sender, RoutedEventArgs e)
+        async void btn_StartMaxThroughput_Click(object sender, RoutedEventArgs e)
         {
             int[,] table = graph.transformationGraph();
 
             int[,] rGraph = new int[(int)Math.Sqrt(table.Length), (int)Math.Sqrt(table.Length)];
 
-            tb_Return.Text = $"Ответ: {MaxFlow.fordFulkerson(table, rGraph, Convert.ToInt32(tb_FromNode.Text) - 1, Convert.ToInt32(tb_BeforeNode.Text) - 1)}";
+            int idStart = Convert.ToInt32(tb_FromNode.Text) - 1;
+            int idFinal = Convert.ToInt32(tb_BeforeNode.Text) - 1;
+
+            Array.Copy(table, rGraph, table.Length);
+
+            int count = 0;
+
+            int[] parent = new int[countNode];
+
+            int max_flow = 0;
+            List<int> route = new List<int>();
+
+            while (MaxFlow.bfs(rGraph, idStart, idFinal, parent, countNode))
+            {
+                count++;
+                int min = MaxFlow.fordFulkerson(table, rGraph, idStart,  idFinal, parent, ref route);
+
+                List<Ellipse> listEl = FindNodeById(route);
+                List<Line> listLine = FindEdgeById(route);
+                ShowAction(min, route, count, listEl, listLine);
+                await Task.Delay(3000);
+
+                BackColorNodeAndEdge(route, listEl, listLine);
+
+                max_flow += min;
+            }
+
+            tb_Return.Text = $"Ответ: {max_flow}";
+        }
+        void ShowAction(int min, List<int> route, int count, List<Ellipse> listEl, List<Line> listLine)
+        {
+            string str = "";
+            for (int i = 0; i < route.Count; i++)
+            {
+                str += $"{route[route.Count-i-1]+1} ";
+            }
+            PaintNodeAndEdge(route, listEl, listLine);
+            tb_logs.Text += $"{count}) Идем по вершинам с id {str} затем выбераем ребро с самым минимальным пропусным значением {min}\n";
 
         }
 
+        void PaintNodeAndEdge(List<int> route, List<Ellipse> listEl, List<Line> listLine) //Brushes.Gray
+        {
+            for (int i = 0; i < route.Count; i++)
+            {
+                listEl[i].Fill = Brushes.DarkRed;
+                if (i != 0)
+                    listLine[i - 1].Stroke = Brushes.DarkRed;
+            }
+        }
 
+        void BackColorNodeAndEdge(List<int> route, List<Ellipse> listEl, List<Line> listLine)
+        {
+            for (int i = 0; i < route.Count; i++)
+            {
+                listEl[i].Fill = Brushes.Gray;
+                if (i != 0)
+                    listLine[i - 1].Stroke = Brushes.Black;
+            }
+        }
+       List<Ellipse> FindNodeById(List<int> route)
+        {
+            List<Ellipse> el = new List<Ellipse>();
+            var images = canvas.Children.OfType<Ellipse>().ToList();
+            foreach (var image in images)
+            {
+                for (int i = 0; i < route.Count; i++)
+                {
+                    if (image.Name == $"id{route[i]+1}")
+                        el.Add(image);
+                }
+                
+            }
+            return el;
+        }
+
+        List<Line> FindEdgeById(List<int> route)
+        {
+            List<Line> line = new List<Line>();
+            var images = canvas.Children.OfType<Line>().ToList();
+            foreach (var image in images)
+            {
+                for (int i = 0; i < route.Count-1; i++) //route[route.Count - 1-i] _ route[route.Count - 2-i]
+                {
+                    if (image.Name == $"id{route[route.Count - 1 - i]+1}_id{route[route.Count - 2 - i]+1}")
+                        line.Add(image);
+                }
+
+            }
+            return line;
+        }
     }
 }

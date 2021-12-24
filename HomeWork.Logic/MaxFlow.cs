@@ -6,54 +6,39 @@ namespace HomeWork5.Logic
 {
 	public class MaxFlow
 	{
-		static int V;
-		public static int fordFulkerson(int[,] graph, int[,] rGraph, int idStart, int idFinal)
+		public static int fordFulkerson(int[,] graph, int[,] rGraph, int idStart, int idFinal, int[] parent, ref List<int> route)
 		{
-			V = (int)Math.Sqrt(graph.Length);
-
 			int i, j;
 
-			Array.Copy(graph, rGraph, graph.Length);
+			route = new List<int>();
 
-			int[] parent = new int[V];
-
-			int max_flow = 0;
-
-			while (bfs(rGraph, idStart, idFinal, parent))
+			int path_flow = int.MaxValue;
+			for (j = idFinal; j != idStart; j = parent[j]) // находим минимальную пропускную способноть 
 			{
-				List<int> route = new List<int>();
+				i = parent[j];
+				route.Add(j);
+				path_flow
+					= Math.Min(path_flow, rGraph[i, j]);
+			}
+			route.Add(idStart);
 
-				int path_flow = int.MaxValue; 
-				for (j = idFinal; j != idStart; j = parent[j]) // находим минимальную пропускную способноть 
-				{
-					i = parent[j];
-					route.Add(j);
-					path_flow
-						= Math.Min(path_flow, rGraph[i, j]);
-				}
-				route.Add(idStart);
-
-				for (j = idFinal; j != idStart; j = parent[j]) // переворот
-				{
-					i = parent[j];
-					rGraph[i, j] -= path_flow;
-                    rGraph[j, i] += path_flow;
-                }
-
-                max_flow += path_flow;
-
-				// ShowPath();
-
+			for (j = idFinal; j != idStart; j = parent[j]) // переворот
+			{
+				i = parent[j];
+				rGraph[i, j] -= path_flow;
+				rGraph[j, i] += path_flow;
 			}
 
-			return max_flow;
+			return path_flow;
+
+
 		}
 
-		static bool bfs(int[,] rGraph, int idStart, int idFinal, int[] parent)
+		public static bool bfs(int[,] rGraph, int idStart, int idFinal, int[] parent, int countNode)
 		{
 
-			bool[] visited = new bool[V];
-			for (int i = 0; i < V; ++i)
+			bool[] visited = new bool[countNode];
+			for (int i = 0; i < countNode; ++i)
 				visited[i] = false;
 
 			List<int> queue = new List<int>();
@@ -66,7 +51,7 @@ namespace HomeWork5.Logic
 				int i = queue[0];
 				queue.RemoveAt(0);
 
-				for (int j = 0; j < V; j++)
+				for (int j = 0; j < countNode; j++)
 				{
 					if (visited[j] == false
 						&& rGraph[i, j] > 0)

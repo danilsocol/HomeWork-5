@@ -69,16 +69,16 @@ namespace HomeWork5.Logic
             }
             return null;
         }
-            public void FindMinFlow(int idStart, int idFinal)
-        {
-            int[,] rGraph = new int[(int)Math.Sqrt(table.Length), (int)Math.Sqrt(table.Length)];
+        //    public void FindMinFlow(int idStart, int idFinal)
+        //{
+        //    int[,] rGraph = new int[(int)Math.Sqrt(table.Length), (int)Math.Sqrt(table.Length)];
 
-            int[,] t = transformationGraph();
+        //    int[,] t = transformationGraph();
 
-            MaxFlow.fordFulkerson(table, rGraph, idStart, idFinal);
+        //    MaxFlow.fordFulkerson(table, rGraph, idStart, idFinal);
 
-            setPayment(rGraph);
-        }
+        //    setPayment(rGraph);
+        //}
         public void setPayment(int[,] rGraph)
         {
             for (int i = 0; i < nodes.Count; i++)
