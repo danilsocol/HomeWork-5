@@ -1,0 +1,10 @@
+D:\Project\HomeWork 5\HomeWork.Logic\bin\Debug\netcoreapp3.1\HomeWork_5.Logic.deps.json
+D:\Project\HomeWork 5\HomeWork.Logic\bin\Debug\netcoreapp3.1\HomeWork_5.Logic.dll
+D:\Project\HomeWork 5\HomeWork.Logic\bin\Debug\netcoreapp3.1\HomeWork_5.Logic.pdb
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.csproj.AssemblyReference.cache
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.AssemblyInfoInputs.cache
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.AssemblyInfo.cs
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.csproj.CoreCompileInputs.cache
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.dll
+D:\Project\HomeWork 5\HomeWork.Logic\obj\Debug\netcoreapp3.1\HomeWork_5.Logic.pdb
